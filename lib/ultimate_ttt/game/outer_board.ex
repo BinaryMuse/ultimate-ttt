@@ -77,8 +77,7 @@ defmodule UltimateTtt.Game.OuterBoard do
   """
   @spec replace_inner_board(board, number, InnerBoard.board) :: board
   def replace_inner_board(board, inner_idx, new_inner_board) do
-    new_inner = %{ board: new_inner_board, status: InnerBoard.status(new_inner_board) }
-    Kernel.put_elem(board, inner_idx, new_inner)
+    Kernel.put_elem(board, inner_idx, create_inner_board(new_inner_board))
   end
 
   @doc """
