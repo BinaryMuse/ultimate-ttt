@@ -49,6 +49,14 @@ defmodule UltimateTttTest.Game.OuterBoard do
     {:err, :invalid_move} = OuterBoard.place_tile(board, {9, 0}, :x)
   end
 
+  test "returns valid moves" do
+    mid_game_board = InnerBoardTest.mid_game_board()
+    tie_board = InnerBoardTest.tie_board()
+    boards = List.duplicate(mid_game_board, 2) ++ List.duplicate(tie_board, 7)
+    board = OuterBoard.with_boards(boards)
+    assert OuterBoard.valid_moves(board) == [{0, 0}, {0, 3}, {0, 8}, {1, 0}, {1, 3}, {1, 8}]
+  end
+
   test "reports board status" do
     assert OuterBoard.status(mid_game_board()) == :in_progress
     assert OuterBoard.status(tie_board()) == :tie

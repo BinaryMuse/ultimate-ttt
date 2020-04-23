@@ -39,6 +39,13 @@ defmodule UltimateTtt.Game.OuterBoard do
     Kernel.elem(board, index) |> Map.get(:board)
   end
 
+  @spec valid_moves(board) :: [space]
+  def valid_moves(board) do
+    Enum.flat_map(0..8, fn i ->
+      get_inner_board(board, i) |> InnerBoard.valid_moves() |> Enum.map(&{i, &1})
+    end)
+  end
+
   @doc """
   Determines if the given move is valid for the board. The move
   is specified as `{board_idx, space_idx}`.
