@@ -6,10 +6,10 @@ defmodule UltimateTtt.Game.OuterBoard do
   @type board_status :: :in_progress | :tie | {:win, InnerBoard.player}
   @type space :: {number, number}
 
-  @spec new :: board
   @doc """
   Returns a new, empty board
   """
+  @spec new :: board
   def new do
     Tuple.duplicate(create_inner_board(), 9)
   end
