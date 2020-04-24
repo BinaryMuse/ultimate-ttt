@@ -13,10 +13,11 @@ defmodule UltimateTttTest.Game.InnerBoard do
   end
 
   def winning_boards(tile) do
-    letter = case tile do
-      :x -> "x"
-      :o -> "o"
-    end
+    letter =
+      case tile do
+        :x -> "x"
+        :o -> "o"
+      end
 
     [
       "xxx......",
@@ -28,12 +29,13 @@ defmodule UltimateTttTest.Game.InnerBoard do
       "x...x...x",
       "..x.x.x.."
     ]
-      |> Enum.map(&String.replace(&1, "x", letter))
-      |> Enum.map(&InnerBoard.deserialize/1)
+    |> Enum.map(&String.replace(&1, "x", letter))
+    |> Enum.map(&InnerBoard.deserialize/1)
   end
 
   test "creates a board" do
-    assert InnerBoard.new == {:empty, :empty, :empty, :empty, :empty, :empty, :empty, :empty, :empty}
+    assert InnerBoard.new() ==
+             {:empty, :empty, :empty, :empty, :empty, :empty, :empty, :empty, :empty}
   end
 
   test "serializes a board" do
@@ -47,15 +49,15 @@ defmodule UltimateTttTest.Game.InnerBoard do
 
   test "allows moves in empty spaces" do
     board = mid_game_board()
-    assert InnerBoard.valid_move?(board, 0)  == true
-    assert InnerBoard.valid_move?(board, 1)  == false
-    assert InnerBoard.valid_move?(board, 2)  == false
-    assert InnerBoard.valid_move?(board, 8)  == true
+    assert InnerBoard.valid_move?(board, 0) == true
+    assert InnerBoard.valid_move?(board, 1) == false
+    assert InnerBoard.valid_move?(board, 2) == false
+    assert InnerBoard.valid_move?(board, 8) == true
     assert InnerBoard.valid_move?(board, 10) == false
   end
 
   test "lists valid moves" do
-    assert InnerBoard.valid_moves(InnerBoard.new) == [0, 1, 2, 3, 4, 5, 6, 7, 8]
+    assert InnerBoard.valid_moves(InnerBoard.new()) == [0, 1, 2, 3, 4, 5, 6, 7, 8]
     assert InnerBoard.valid_moves(mid_game_board()) == [0, 3, 8]
   end
 

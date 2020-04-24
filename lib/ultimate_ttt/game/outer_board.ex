@@ -1,9 +1,11 @@
 defmodule UltimateTtt.Game.OuterBoard do
   alias UltimateTtt.Game.InnerBoard
 
-  @type inner_board :: %{ board: InnerBoard.board, status: InnerBoard.board_status }
-  @opaque board :: {inner_board, inner_board, inner_board, inner_board, inner_board, inner_board, inner_board, inner_board, inner_board}
-  @type board_status :: :in_progress | :tie | {:win, InnerBoard.player}
+  @type inner_board :: %{board: InnerBoard.board(), status: InnerBoard.board_status()}
+  @opaque board ::
+            {inner_board, inner_board, inner_board, inner_board, inner_board, inner_board,
+             inner_board, inner_board, inner_board}
+  @type board_status :: :in_progress | :tie | {:win, InnerBoard.player()}
   @type space :: {number, number}
 
   @doc """
@@ -17,7 +19,7 @@ defmodule UltimateTtt.Game.OuterBoard do
   @doc """
   Create an `OuterBoard` out of a list of 9 `InnerBoard`s
   """
-  @spec with_boards([InnerBoard.board]) :: board
+  @spec with_boards([InnerBoard.board()]) :: board
   def with_boards(boards) when is_list(boards) and length(boards) == 9 do
     Enum.map(boards, &create_inner_board/1) |> List.to_tuple()
   end
@@ -26,9 +28,9 @@ defmodule UltimateTtt.Game.OuterBoard do
   Creates inner board data based on the passed inner board, or a
   new empty inner board if none provided.
   """
-  @spec create_inner_board(InnerBoard.board) :: inner_board
-  def create_inner_board(board \\ InnerBoard.new) do
-    %{ board: board, status: InnerBoard.status(board) }
+  @spec create_inner_board(InnerBoard.board()) :: inner_board
+  def create_inner_board(board \\ InnerBoard.new()) do
+    %{board: board, status: InnerBoard.status(board)}
   end
 
   @doc """
@@ -55,11 +57,13 @@ defmodule UltimateTtt.Game.OuterBoard do
   @spec valid_move?(board, space) :: boolean
   def valid_move?(board, {inner_idx, inner_space}) when inner_idx >= 0 and inner_idx <= 8 do
     inner = Kernel.elem(board, inner_idx)
+
     case inner[:status] do
       :in_progress -> InnerBoard.valid_move?(inner[:board], inner_space)
-      _            -> false
+      _ -> false
     end
   end
+
   def valid_move?(_, _), do: false
 
   @doc """
@@ -67,7 +71,7 @@ defmodule UltimateTtt.Game.OuterBoard do
   Returns `{:ok, new_board}` if successful and `{:err, :invalid_move}` otherwise.
   The move is specified as `{board_idx, space_idx}`.
   """
-  @spec place_tile(board, space, InnerBoard.player) :: {:ok, board} | {:err, :invalid_move}
+  @spec place_tile(board, space, InnerBoard.player()) :: {:ok, board} | {:err, :invalid_move}
   def place_tile(board, {inner_idx, inner_space} = space, tile) do
     with true <- valid_move?(board, space),
          inner = get_inner_board(board, inner_idx),
@@ -82,7 +86,7 @@ defmodule UltimateTtt.Game.OuterBoard do
   Returns a new board after replacing the data at the given index
   with new data generated from the given `InnerBoard.board`.
   """
-  @spec replace_inner_board(board, number, InnerBoard.board) :: board
+  @spec replace_inner_board(board, number, InnerBoard.board()) :: board
   def replace_inner_board(board, inner_idx, new_inner_board) do
     Kernel.put_elem(board, inner_idx, create_inner_board(new_inner_board))
   end
@@ -106,9 +110,10 @@ defmodule UltimateTtt.Game.OuterBoard do
   defp get_status([_, _, x, _, _, x, _, _, x]) when elem(x, 0) == :win, do: x
   defp get_status([x, _, _, _, x, _, _, _, x]) when elem(x, 0) == :win, do: x
   defp get_status([_, _, x, _, x, _, x, _, _]) when elem(x, 0) == :win, do: x
+
   defp get_status(statuses) do
     case Enum.any?(statuses, fn x -> x == :in_progress end) do
-      true  -> :in_progress
+      true -> :in_progress
       false -> :tie
     end
   end
@@ -119,8 +124,8 @@ defmodule UltimateTtt.Game.OuterBoard do
   @spec serialize(board) :: binary
   def serialize(board) do
     Tuple.to_list(board)
-      |> Enum.map(&InnerBoard.serialize(&1[:board]))
-      |> Enum.join("/")
+    |> Enum.map(&InnerBoard.serialize(&1[:board]))
+    |> Enum.join("/")
   end
 
   @doc """
@@ -129,7 +134,7 @@ defmodule UltimateTtt.Game.OuterBoard do
   @spec deserialize(binary) :: board
   def deserialize(serialized) do
     String.split(serialized, "/")
-      |> Enum.map(&InnerBoard.deserialize/1)
-      |> with_boards()
+    |> Enum.map(&InnerBoard.deserialize/1)
+    |> with_boards()
   end
 end

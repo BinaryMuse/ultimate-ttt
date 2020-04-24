@@ -27,7 +27,7 @@ defmodule UltimateTtt.Game.InnerBoard do
   def valid_move?(board, space) when space >= 0 and space <= 8 do
     case Kernel.elem(board, space) do
       :empty -> true
-      _      -> false
+      _ -> false
     end
   end
 
@@ -42,7 +42,7 @@ defmodule UltimateTtt.Game.InnerBoard do
   @spec place_tile(board, number, player) :: {:ok, board} | {:err, :invalid_move}
   def place_tile(board, space, tile) do
     case valid_move?(board, space) do
-      true  -> {:ok, board |> Kernel.put_elem(space, tile)}
+      true -> {:ok, board |> Kernel.put_elem(space, tile)}
       false -> {:err, :invalid_move}
     end
   end
@@ -60,9 +60,10 @@ defmodule UltimateTtt.Game.InnerBoard do
   def status({_, _, x, _, _, x, _, _, x}) when x != :empty, do: {:win, x}
   def status({x, _, _, _, x, _, _, _, x}) when x != :empty, do: {:win, x}
   def status({_, _, x, _, x, _, x, _, _}) when x != :empty, do: {:win, x}
+
   def status(board) do
     case Tuple.to_list(board) |> Enum.any?(fn x -> x == :empty end) do
-      true  -> :in_progress
+      true -> :in_progress
       false -> :tie
     end
   end
@@ -73,7 +74,7 @@ defmodule UltimateTtt.Game.InnerBoard do
   @spec serialize(board) :: binary
   def serialize(board) do
     Tuple.to_list(board)
-      |> Enum.map_join("", &_serialize_tile/1)
+    |> Enum.map_join("", &_serialize_tile/1)
   end
 
   @doc """
@@ -82,16 +83,16 @@ defmodule UltimateTtt.Game.InnerBoard do
   @spec deserialize(binary) :: board
   def deserialize(str) when is_binary(str) do
     String.split(str, "", trim: true)
-      |> Enum.map(&_deserialize_tile/1)
-      |> List.to_tuple()
+    |> Enum.map(&_deserialize_tile/1)
+    |> List.to_tuple()
   end
 
   @spec _serialize_tile(tile) :: <<_::8>>
   def _serialize_tile(tile) do
     case tile do
       :empty -> "."
-      :x     -> "x"
-      :o     -> "o"
+      :x -> "x"
+      :o -> "o"
     end
   end
 

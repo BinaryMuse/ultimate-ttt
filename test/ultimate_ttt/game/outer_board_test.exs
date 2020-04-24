@@ -17,11 +17,14 @@ defmodule UltimateTttTest.Game.OuterBoard do
   end
 
   test "serializes" do
-    assert OuterBoard.new |> OuterBoard.serialize() == Enum.map(1..9, fn _ -> "........." end) |> Enum.join("/")
+    assert OuterBoard.new() |> OuterBoard.serialize() ==
+             Enum.map(1..9, fn _ -> "........." end) |> Enum.join("/")
   end
 
   test "deserializes" do
-    serialized = "........x/........./........./........./........./........./........./........./........."
+    serialized =
+      "........x/........./........./........./........./........./........./........./........."
+
     outer = OuterBoard.deserialize(serialized)
     top_left = Kernel.elem(outer, 0)
     assert top_left[:status] == :in_progress
@@ -29,7 +32,9 @@ defmodule UltimateTttTest.Game.OuterBoard do
   end
 
   test "fetches inner boards by index" do
-    serialized = "........x/........./........./........./........./........./........./........./........."
+    serialized =
+      "........x/........./........./........./........./........./........./........./........."
+
     outer = OuterBoard.deserialize(serialized)
     top_left = OuterBoard.get_inner_board(outer, 0)
     assert InnerBoard.serialize(top_left) == "........x"
