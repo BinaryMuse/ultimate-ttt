@@ -17,7 +17,7 @@ defmodule UltimateTtt.Game.InnerBoard do
   """
   @spec valid_moves(board) :: list(number)
   def valid_moves(board) do
-    Enum.filter(0..8, &valid_move?(board, &1))
+    for i <- 0..8, valid_move?(board, i), do: i
   end
 
   @doc """

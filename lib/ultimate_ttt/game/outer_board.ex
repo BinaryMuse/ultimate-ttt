@@ -35,15 +35,17 @@ defmodule UltimateTtt.Game.OuterBoard do
   Returns the `InnerBoard.board` stored at the given index
   """
   @spec get_inner_board(board, number) :: any
-  def get_inner_board(board, index) when index >= 0 and index <= 9 do
+  def get_inner_board(board, index) when index >= 0 and index <= 8 do
     Kernel.elem(board, index) |> Map.get(:board)
   end
 
   @spec valid_moves(board) :: [space]
   def valid_moves(board) do
-    Enum.flat_map(0..8, fn i ->
-      get_inner_board(board, i) |> InnerBoard.valid_moves() |> Enum.map(&{i, &1})
-    end)
+    for i <- 0..8,
+        moves = get_inner_board(board, i) |> InnerBoard.valid_moves(),
+        m <- moves do
+      {i, m}
+    end
   end
 
   @doc """
@@ -66,15 +68,13 @@ defmodule UltimateTtt.Game.OuterBoard do
   The move is specified as `{board_idx, space_idx}`.
   """
   @spec place_tile(board, space, InnerBoard.player) :: {:ok, board} | {:err, :invalid_move}
-  def place_tile(board, {inner_idx, inner_space}, tile) do
-    case valid_move?(board, {inner_idx, inner_space}) do
-      true ->
-        inner = Kernel.elem(board, inner_idx)
-        case InnerBoard.place_tile(inner[:board], inner_space, tile) do
-          {:ok, new_inner_board} -> {:ok, replace_inner_board(board, inner_idx, new_inner_board)}
-          _                      -> {:err, :invalid_move}
-        end
-      false -> {:err, :invalid_move}
+  def place_tile(board, {inner_idx, inner_space} = space, tile) do
+    with true <- valid_move?(board, space),
+         inner = get_inner_board(board, inner_idx),
+         {:ok, new_inner_board} <- InnerBoard.place_tile(inner, inner_space, tile) do
+      {:ok, replace_inner_board(board, inner_idx, new_inner_board)}
+    else
+      _ -> {:err, :invalid_move}
     end
   end
 
