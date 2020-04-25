@@ -91,16 +91,22 @@ defmodule UltimateTtt.Game.OuterBoard do
     Kernel.put_elem(board, inner_idx, create_inner_board(new_inner_board))
   end
 
+  @spec status_per_inner_board(board) :: [board_status]
+  def status_per_inner_board(board) do
+    Tuple.to_list(board) |> Enum.map(&Map.get(&1, :status))
+  end
+
   @doc """
   Returns the status of the board. This can be `:in_progress`, `:tie`,
   or `{:win, player}` (where `player` is `:x` or `:o`).
   """
   @spec status(board) :: board_status
   def status(board) do
-    statuses = Tuple.to_list(board) |> Enum.map(&Map.get(&1, :status))
+    statuses = status_per_inner_board(board)
     get_status(statuses)
   end
 
+  @doc false
   @spec get_status([board_status]) :: board_status
   defp get_status([x, x, x, _, _, _, _, _, _]) when elem(x, 0) == :win, do: x
   defp get_status([_, _, _, x, x, x, _, _, _]) when elem(x, 0) == :win, do: x
@@ -116,6 +122,10 @@ defmodule UltimateTtt.Game.OuterBoard do
       true -> :in_progress
       false -> :tie
     end
+  end
+
+  def get_status_for_board(board, board_idx) when board_idx >= 0 and board_idx <= 8 do
+    Kernel.elem(board, board_idx)[:status]
   end
 
   @doc """

@@ -62,7 +62,11 @@ defmodule UltimateTttTest.Game.OuterBoard do
     assert OuterBoard.valid_moves(board) == [{0, 0}, {0, 3}, {0, 8}, {1, 0}, {1, 3}, {1, 8}]
   end
 
-  test "reports board status" do
+  test "reports status per inner board" do
+    assert OuterBoard.status_per_inner_board(mid_game_board()) == List.duplicate(:in_progress, 9)
+  end
+
+  test "reports overall board status" do
     assert OuterBoard.status(mid_game_board()) == :in_progress
     assert OuterBoard.status(tie_board()) == :tie
 
