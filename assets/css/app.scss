@@ -1,31 +1,91 @@
-/* This file is for your main application css. */
-@import "./phoenix.css";
+* {
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+}
 
-/* Alerts and form errors */
-.alert {
-  padding: 15px;
-  margin-bottom: 20px;
-  border: 1px solid transparent;
-  border-radius: 4px;
+body {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
 }
-.alert-info {
-  color: #31708f;
-  background-color: #d9edf7;
-  border-color: #bce8f1;
+
+[data-phx-main] {
+  height: 100vh;
+  width: 100%;
 }
-.alert-warning {
-  color: #8a6d3b;
-  background-color: #fcf8e3;
-  border-color: #faebcc;
+
+#container {
+  user-select: none;
+  height: 100vh;
+  width: 100%;
 }
-.alert-danger {
-  color: #a94442;
-  background-color: #f2dede;
-  border-color: #ebccd1;
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  align-items: center;
+  justify-items: center;
 }
-.alert p {
-  margin-bottom: 0;
+
+.cell {
+  font-size: 5vmin;
+  align-self: stretch;
+  justify-self: stretch;
+  padding: 8px;
+  text-align: center;
+
+  &.won-x {
+    background-color: #dadaff;
+  }
+
+  &.won-o {
+    background-color: #ffbaba;
+  }
+
+  &.tied {
+    background-color: #c7c7c7;
+  }
 }
-.alert:empty {
-  display: none;
+
+.cell-text {
+  vertical-align: sub;
+}
+
+.X {
+  color: blue;
+}
+
+.O {
+  color: red;
+}
+
+.inner {
+  &:not(.taken):not(.invalid) {
+    background-color: rgba(0, 255, 0, 0.08);
+
+    &:hover {
+      cursor: pointer;
+      background-color: rgba(0, 255, 0, 0.15);
+    }
+  }
+}
+
+.bb {
+  border-bottom: 1px solid black;
+}
+.bt {
+  border-top: 1px solid black;
+}
+.bl {
+  border-left: 1px solid black;
+}
+.br {
+  border-right: 1px solid black;
+}
+.blight > * {
+  border-color: #999;
 }

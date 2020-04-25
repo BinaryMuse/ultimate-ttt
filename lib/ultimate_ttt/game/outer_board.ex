@@ -36,7 +36,7 @@ defmodule UltimateTtt.Game.OuterBoard do
   @doc """
   Returns the `InnerBoard.board` stored at the given index
   """
-  @spec get_inner_board(board, number) :: any
+  @spec get_inner_board(board, number) :: InnerBoard.board()
   def get_inner_board(board, index) when index >= 0 and index <= 8 do
     Kernel.elem(board, index) |> Map.get(:board)
   end
@@ -124,6 +124,7 @@ defmodule UltimateTtt.Game.OuterBoard do
     end
   end
 
+  @spec get_status_for_board(board, number) :: board_status()
   def get_status_for_board(board, board_idx) when board_idx >= 0 and board_idx <= 8 do
     Kernel.elem(board, board_idx)[:status]
   end

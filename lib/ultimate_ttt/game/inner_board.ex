@@ -35,6 +35,11 @@ defmodule UltimateTtt.Game.InnerBoard do
     false
   end
 
+  @spec get_player_at(board, number) :: tile()
+  def get_player_at(board, space) do
+    Kernel.elem(board, space)
+  end
+
   @doc """
   Attempts to place the given tile on the board at the given space.
   Returns `{:ok, new_board}` if successful and `{:err, :invalid_move}` otherwise.

@@ -1,6 +1,7 @@
 defmodule UltimateTtt.Game do
   alias UltimateTtt.Game.{InnerBoard, OuterBoard}
 
+  @type tile :: InnerBoard :: tile()
   @type player :: InnerBoard.player()
   @type board :: OuterBoard.board()
   @type game_status :: OuterBoard.board_status()
@@ -35,6 +36,12 @@ defmodule UltimateTtt.Game do
   def status(game) do
     statuses = OuterBoard.status_per_inner_board(game.board)
     get_status(statuses)
+  end
+
+  @spec get_inner_board_status(game, number) :: game_status()
+  def get_inner_board_status(game, idx) do
+    OuterBoard.status_per_inner_board(game.board)
+    |> Enum.at(idx)
   end
 
   @doc false
@@ -76,6 +83,12 @@ defmodule UltimateTtt.Game do
       false ->
         {:error, :invalid_move}
     end
+  end
+
+  @spec tile_at(game, space) :: tile
+  def tile_at(game, {board_idx, space_idx}) do
+    OuterBoard.get_inner_board(game.board, board_idx)
+    |> InnerBoard.get_player_at(space_idx)
   end
 
   @doc """
