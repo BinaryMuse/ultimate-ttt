@@ -8,6 +8,17 @@ defmodule UltimateTtt.MixProject do
       elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
+      description:
+        "This packages implements the rules of Ultimate Tic-Tac-Toe as well as an OTP app for creating and managing games.",
+      source_url: "https://github.com/BinaryMuse/ultimate-ttt",
+
+      # Package
+      package: [
+        licenses: ["MIT"],
+        links: %{
+          "GitHub" => "https://github.com/BinaryMuse/ultimate-ttt"
+        }
+      ],
 
       # Docs
       name: "Ultimate Tic-Tac-Toe",
@@ -40,7 +51,7 @@ defmodule UltimateTtt.MixProject do
     """
     <style>
     .content-inner code.text {
-      font-family: Menlo;
+      font-family: Menlo, monospace;
       line-height: 1.3em;
     }
     </style>
