@@ -22,9 +22,11 @@ defmodule UltimeTttTest.Game do
     end
 
     def win_game() do
+      tie_board = InnerBoard.deserialize("xoxoxxoxo")
+
       InnerBoard.deserialize("xoxoxxoox")
       |> List.duplicate(3)
-      |> Enum.concat(List.duplicate(tie_game().board, 6))
+      |> Enum.concat(List.duplicate(tie_board, 6))
       |> OuterBoard.with_boards()
       |> Game.with_board()
     end

@@ -1,7 +1,7 @@
 defmodule UltimateTtt.Game.OuterBoard do
   alias UltimateTtt.Game.InnerBoard
 
-  @type inner_board :: %{board: InnerBoard.board(), status: InnerBoard.board_status()}
+  @type inner_board :: %{board: InnerBoard.t(), status: InnerBoard.board_status()}
   @opaque board ::
             {inner_board, inner_board, inner_board, inner_board, inner_board, inner_board,
              inner_board, inner_board, inner_board}
@@ -19,7 +19,7 @@ defmodule UltimateTtt.Game.OuterBoard do
   @doc """
   Create an `OuterBoard` out of a list of 9 `InnerBoard`s
   """
-  @spec with_boards([InnerBoard.board()]) :: board
+  @spec with_boards([InnerBoard.t()]) :: board
   def with_boards(boards) when is_list(boards) and length(boards) == 9 do
     Enum.map(boards, &create_inner_board/1) |> List.to_tuple()
   end
@@ -28,7 +28,7 @@ defmodule UltimateTtt.Game.OuterBoard do
   Creates inner board data based on the passed inner board, or a
   new empty inner board if none provided.
   """
-  @spec create_inner_board(InnerBoard.board()) :: inner_board
+  @spec create_inner_board(InnerBoard.t()) :: inner_board
   def create_inner_board(board \\ InnerBoard.new()) do
     %{board: board, status: InnerBoard.status(board)}
   end
