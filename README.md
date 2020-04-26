@@ -1,5 +1,7 @@
 # Elixir Ultimate Tic-Tac-Toe
 
+<!-- module-doc -->
+
 `UltimateTtt` is an Elixir module implementing the game Ultimate Tic-Tac-Toe. It implements the core, sequential game logic as well as an OTP app for creating and managing games. If you're unfamiliar with the game, [check out _Ultimate Tic-Tac-Toe_ by Ben Orlin](https://mathwithbaddrawings.com/ultimate-tic-tac-toe-original-post/).
 
 ## Links
