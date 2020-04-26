@@ -1,7 +1,7 @@
 defmodule UltimateTtt.Game do
   alias UltimateTtt.Game.{InnerBoard, OuterBoard}
 
-  @type tile :: InnerBoard :: tile()
+  @type tile :: InnerBoard.tile()
   @type player :: InnerBoard.player()
   @type board :: OuterBoard.board()
   @type game_status :: OuterBoard.board_status()
