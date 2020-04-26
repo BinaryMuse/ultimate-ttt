@@ -4,6 +4,7 @@
 
 ## Links
 
+- Package: [https://hex.pm/packages/ultimate_ttt](https://hex.pm/packages/ultimate_ttt)
 - Documentation: [https://hexdocs.pm/ultimate_ttt/](https://hexdocs.pm/ultimate_ttt/)
 - Source: [https://github.com/BinaryMuse/ultimate-ttt](https://github.com/BinaryMuse/ultimate-ttt)
 
