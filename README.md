@@ -90,6 +90,8 @@ The game is over when a player has won three inner boards in a row, resulting in
 
 ### Core Rules
 
+The core rules of Ultimate Tic-Tac-Toe are implemented by the `UltimateTtt.Game` module.
+
 ```elixir
 iex> alias UltimateTtt.Game
 iex> game = Game.new()
