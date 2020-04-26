@@ -50,16 +50,16 @@ defmodule UltimeTttTest.Game do
 
       assert Game.valid_moves(game, :x) == [{0, 0}, {0, 3}, {0, 8}, {1, 0}, {1, 3}, {1, 8}]
       assert Game.valid_moves(game, :o) == []
-      {:ok, game} = Game.place_tile(game, :x, {0, 0})
+      {:ok, game} = Game.place_tile(game, :x, {1, 0})
       assert Game.valid_moves(game, :x) == []
-      assert Game.valid_moves(game, :o) == [{0, 3}, {0, 8}]
+      assert Game.valid_moves(game, :o) == [{0, 0}, {0, 3}, {0, 8}]
     end
 
     test "changes player turn" do
       game = Game.new()
-      assert Game.get_turn(game) == :x
+      assert Game.turn(game) == :x
       {:ok, game} = Game.place_tile(game, :x, {0, 0})
-      assert Game.get_turn(game) == :o
+      assert Game.turn(game) == :o
     end
 
     test "enforces that moves happen in the inner board associated with the last space" do
@@ -79,7 +79,7 @@ defmodule UltimeTttTest.Game do
         |> Game.with_board()
 
       {:ok, game} = Game.place_tile(game, :x, {0, 0})
-      assert OuterBoard.get_status_for_board(game.board, 0) == :tie
+      assert OuterBoard.status_for_board_at(game.board, 0) == :tie
       assert Game.valid_move?(game, :o, {8, 1}) == true
     end
 
@@ -87,6 +87,17 @@ defmodule UltimeTttTest.Game do
       assert Game.status(Game.new()) == :in_progress
       assert Game.status(tie_game()) == :tie
       assert Game.status(win_game()) == {:win, :x}
+    end
+
+    test "serializes and deserializes successfully" do
+      game = Game.new()
+      {:ok, game} = Game.place_tile(game, :x, {0, 0})
+      {:ok, game} = Game.place_tile(game, :o, {0, 8})
+
+      serialized = Game.serialize(game)
+      assert is_binary(serialized) == true
+      deserialized = Game.deserialize(serialized)
+      assert game == deserialized
     end
   end
 end

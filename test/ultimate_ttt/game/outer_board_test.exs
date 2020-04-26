@@ -26,9 +26,9 @@ defmodule UltimateTttTest.Game.OuterBoard do
       "........x/........./........./........./........./........./........./........./........."
 
     outer = OuterBoard.deserialize(serialized)
-    top_left = Kernel.elem(outer, 0)
-    assert top_left[:status] == :in_progress
-    assert InnerBoard.valid_move?(top_left[:board], 8) == false
+    top_left = OuterBoard.inner_board_at(outer, 0)
+    assert InnerBoard.status(top_left) == :in_progress
+    assert InnerBoard.valid_move?(top_left, 8) == false
   end
 
   test "fetches inner boards by index" do
@@ -36,7 +36,7 @@ defmodule UltimateTttTest.Game.OuterBoard do
       "........x/........./........./........./........./........./........./........./........."
 
     outer = OuterBoard.deserialize(serialized)
-    top_left = OuterBoard.get_inner_board(outer, 0)
+    top_left = OuterBoard.inner_board_at(outer, 0)
     assert InnerBoard.serialize(top_left) == "........x"
   end
 
@@ -49,9 +49,9 @@ defmodule UltimateTttTest.Game.OuterBoard do
   test "allows valid moves" do
     board = mid_game_board()
     assert OuterBoard.valid_move?(board, {0, 0}) == true
-    {:ok, board} = OuterBoard.place_tile(board, {0, 0}, :x)
-    {:err, :invalid_move} = OuterBoard.place_tile(board, {0, 0}, :x)
-    {:err, :invalid_move} = OuterBoard.place_tile(board, {9, 0}, :x)
+    {:ok, board} = OuterBoard.place_tile(board, :x, {0, 0})
+    {:err, :invalid_move} = OuterBoard.place_tile(board, :x, {0, 0})
+    {:err, :invalid_move} = OuterBoard.place_tile(board, :x, {9, 0})
   end
 
   test "returns valid moves" do
@@ -71,12 +71,26 @@ defmodule UltimateTttTest.Game.OuterBoard do
     assert OuterBoard.status(tie_board()) == :tie
 
     board = mid_game_board()
-    {:ok, board} = OuterBoard.place_tile(board, {0, 0}, :x)
-    {:ok, board} = OuterBoard.place_tile(board, {0, 3}, :x)
-    {:ok, board} = OuterBoard.place_tile(board, {1, 0}, :x)
-    {:ok, board} = OuterBoard.place_tile(board, {1, 3}, :x)
-    {:ok, board} = OuterBoard.place_tile(board, {2, 0}, :x)
-    {:ok, board} = OuterBoard.place_tile(board, {2, 3}, :x)
+    {:ok, board} = OuterBoard.place_tile(board, :x, {0, 0})
+    {:ok, board} = OuterBoard.place_tile(board, :x, {0, 3})
+    {:ok, board} = OuterBoard.place_tile(board, :x, {1, 0})
+    {:ok, board} = OuterBoard.place_tile(board, :x, {1, 3})
+    {:ok, board} = OuterBoard.place_tile(board, :x, {2, 0})
+    {:ok, board} = OuterBoard.place_tile(board, :x, {2, 3})
     assert OuterBoard.status(board) == {:win, :x}
+  end
+
+  test "doesn't allow moves after the game is over" do
+    assert OuterBoard.valid_moves(tie_board()) == []
+
+    board = mid_game_board()
+    {:ok, board} = OuterBoard.place_tile(board, :x, {0, 0})
+    {:ok, board} = OuterBoard.place_tile(board, :x, {0, 3})
+    {:ok, board} = OuterBoard.place_tile(board, :x, {1, 0})
+    {:ok, board} = OuterBoard.place_tile(board, :x, {1, 3})
+    {:ok, board} = OuterBoard.place_tile(board, :x, {2, 0})
+    {:ok, board} = OuterBoard.place_tile(board, :x, {2, 3})
+    assert OuterBoard.valid_move?(board, {0, 8}) == false
+    assert OuterBoard.valid_moves(board) == []
   end
 end

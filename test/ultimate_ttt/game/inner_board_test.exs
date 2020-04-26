@@ -44,7 +44,7 @@ defmodule UltimateTttTest.Game.InnerBoard do
 
   test "modifies the board with valid moves" do
     board = mid_game_board()
-    {:ok, new_board} = InnerBoard.place_tile(board, 0, :x)
+    {:ok, new_board} = InnerBoard.place_tile(board, :x, 0)
     assert InnerBoard.tile_at(new_board, 0) == :x
 
     assert InnerBoard.place_tile(board, :o, 1) == {:err, :invalid_move}
@@ -58,5 +58,11 @@ defmodule UltimateTttTest.Game.InnerBoard do
     is_win_for = &(InnerBoard.status(&1) == {:win, &2})
     assert Enum.all?(winning_boards(:x), &is_win_for.(&1, :x))
     assert Enum.all?(winning_boards(:o), &is_win_for.(&1, :o))
+  end
+
+  test "doesn't allow moves after a game is over" do
+    win = winning_boards(:x) |> List.first()
+    assert InnerBoard.valid_move?(win, 5) == false
+    assert InnerBoard.valid_moves(win) == []
   end
 end

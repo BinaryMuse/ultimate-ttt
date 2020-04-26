@@ -7,7 +7,18 @@ defmodule UltimateTtt.MixProject do
       version: "0.1.0",
       elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+
+      # Docs
+      name: "Ultimate Tic-Tac-Toe",
+      source_url: "https://github.com/BinaryMuse/ultimate-ttt",
+      homepage_url: "https://github.com/BinaryMuse/ultimate-ttt",
+      docs: [
+        main: "readme",
+        nest_modules_by_prefix: [UltimateTtt],
+        extras: ["README.md": [filename: "readme", title: "README.md"]],
+        before_closing_head_tag: &doc_styles/1
+      ]
     ]
   end
 
@@ -21,8 +32,18 @@ defmodule UltimateTtt.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      # {:dep_from_hexpm, "~> 0.3.0"},
-      # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
+      {:ex_doc, "~> 0.21", only: :dev, runtime: false}
     ]
+  end
+
+  defp doc_styles(:html) do
+    """
+    <style>
+    .content-inner code.text {
+      font-family: Menlo;
+      line-height: 1.3em;
+    }
+    </style>
+    """
   end
 end
